@@ -1,0 +1,142 @@
+# ==========================================
+
+# FULL .gitignore for IntelliJ IDEA + VS Code
+
+# Spring Boot + React + Java + Node.js
+
+# ==========================================
+
+# ==========================================
+
+# GENERAL
+
+# ==========================================
+
+.DS_Store
+Thumbs.db
+*.log
+logs/
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# ==========================================
+
+# INTELLIJ IDEA
+
+# ==========================================
+
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# IntelliJ specific
+
+.idea_modules/
+atlassian-ide-plugin.xml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/shelf/
+.idea/libraries/
+
+# ==========================================
+
+# VS CODE
+
+# ==========================================
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# ==========================================
+
+# ==========================================
+
+# JAVA / SPRING BOOT
+
+# ==========================================
+
+# Maven
+
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+
+# Logs
+
+*.log
+spring.log
+
+# ==========================================
+
+# NODE / REACT
+
+# ==========================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build folders
+
+build/
+dist/
+
+# ==========================================
+
+# ENV FILES (Secrets)
+
+# ==========================================
+
+.env
+.env.*
+*.env
+
+# Spring Boot env files
+
+application-local.properties
+application-local.yml
+application-dev.yml
+application-prod.yml
+
+# ==========================================
+
+# TEST / COVERAGE
+
+# ==========================================
+
+coverage/
+reports/
+
+# ==========================================
+
+# OS GENERATED FILES
+
+# ==========================================
+
+*.lnk
+*.lock
+
+# ==========================================
+
+# TEMP FILES
+
+# ==========================================
+
+tmp/
+temp/
