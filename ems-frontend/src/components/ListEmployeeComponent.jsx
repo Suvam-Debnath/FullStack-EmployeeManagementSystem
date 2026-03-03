@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 const ListEmployeeComponent = () => {
 
+    // State variable to hold the list of employees
     const [employees, setEmployees] = useState([]);
 
     const navigator = useNavigate();
 
+    // useEffect to fetch the list of employees when the component mounts
     useEffect(()=>
     {
         listEmployees().then(response => {
@@ -21,6 +23,10 @@ const ListEmployeeComponent = () => {
         navigator('/add-employee');
     }
 
+    function updateEmployee(id){
+        navigator(`/edit-employee/${id}`);
+    }
+
   return (
     <div className='container'>
         <h2 className='text-center'>List of Employees</h2>
@@ -32,6 +38,7 @@ const ListEmployeeComponent = () => {
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +49,10 @@ const ListEmployeeComponent = () => {
                             <td>{employee.firstName}</td>
                             <td>{employee.lastName}</td>
                             <td>{employee.email}</td>
+                            <td>
+                                <button className='btn btn-info' onClick={()=> updateEmployee(employee.id)}>Update</button>
+                                
+                            </td>
                         </tr>
                     )
                 }

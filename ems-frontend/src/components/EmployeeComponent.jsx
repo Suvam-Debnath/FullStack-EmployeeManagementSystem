@@ -1,24 +1,44 @@
-import React, { useState } from 'react'
-import { createEmployee } from '../services/EmployeeService';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { createEmployee, getEmployeeById } from '../services/EmployeeService';
+import { useNavigate , useParams} from 'react-router-dom';
 
 const EmployeeComponent = () => {
 
+    // State variables for employee details
     const[firstName, setFirstName] = useState('');
     const[lastName, setLastName] = useState('');
     const[email, setEmail] = useState('');
 
+    // Get the employee ID from the URL parameters
+    const { id } = useParams();
+
+    // State to hold validation errors
     const [errors, setErrors] = useState({
         firstName: '',
         lastName: '',
         email: ''
     })
 
+    // useNavigate hook to navigate programmatically
     const navigator = useNavigate();
 
+    // useEffect to fetch employee data if id is present (for update)
+    useEffect(() => {
+        if(id){
+            getEmployeeById(id).then(response => {  
+                setFirstName(response.data.firstName);
+                setLastName(response.data.lastName);
+                setEmail(response.data.email);
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+    }, [id]);
+
+    // Function to handle form submission for saving employee
     function saveEmployee(e){
         e.preventDefault();
-        
+        // Validate the form before submitting
         if(validateForm()){
             const employee = { firstName, lastName, email };
 
@@ -58,12 +78,20 @@ const EmployeeComponent = () => {
         return valid;
     }
 
+    // Function to render the page title based on whether it's an update or add operation
+    function pageTitle(){
+        if(id){
+            return <h2 className='text-center'>Update Employee</h2>
+        }
+        return <h2 className='text-center'>Add Employee</h2>
+    }
+
   return (
     <div className='container'>
         <br />
         <div className="row">
             <div className='card col-md-6 offset-md-3 offset-md-3'>
-                <h2 className='text-center'>Add Employee</h2>
+                { pageTitle() }
                 <div className='card-body'>
                     <form>
                         <div className='form-group mb-2'>
