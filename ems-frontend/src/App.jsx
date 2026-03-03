@@ -5,6 +5,7 @@ import ListEmployeeComponent from './components/ListEmployeeComponent'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import EmployeeComponent from './components/EmployeeComponent'
 import ListDepartmentComponent from './components/ListDepartmentComponent'
+import DepartmentComponent from './components/DepartmentComponent'
 
 function App() {
 
@@ -24,6 +25,8 @@ function App() {
 
             {/* // http://localhost:3000/departments */}
             <Route path='/departments' element={<ListDepartmentComponent />} />
+            {/* // http://localhost:3000/add-department */}
+            <Route path='/add-department' element={<DepartmentComponent />} />
             
           </Routes>
         <FoooterComponent />
