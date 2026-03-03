@@ -13,3 +13,5 @@ export const getEmployeeById = (employeeId) => axios.get(EMPLOYEE_API_BASE_URL+'
 // Function to update an existing employee by sending a PUT request to the backend API
 export const updateEmployee = (employeeId, employee) => axios.put(EMPLOYEE_API_BASE_URL + '/' + employeeId, employee);
 
+// Function to delete an employee by sending a DELETE request to the backend API
+export const deleteEmployee = (employeeId) => axios.delete(EMPLOYEE_API_BASE_URL + '/' + employeeId);
