@@ -27,6 +27,8 @@ function App() {
             <Route path='/departments' element={<ListDepartmentComponent />} />
             {/* // http://localhost:3000/add-department */}
             <Route path='/add-department' element={<DepartmentComponent />} />
+            {/* // http://localhost:3000/edit-department/1 */}
+            <Route path='/edit-department/:id' element={<DepartmentComponent />} />
             
           </Routes>
         <FoooterComponent />

@@ -1,9 +1,11 @@
 package com.suvam.ems.service.impl;
 
 import com.suvam.ems.dto.EmployeeDto;
+import com.suvam.ems.entity.Department;
 import com.suvam.ems.entity.Employee;
 import com.suvam.ems.exception.ResourceNotFoundException;
 import com.suvam.ems.mapper.EmployeeMapper;
+import com.suvam.ems.repository.DepartmentRepository;
 import com.suvam.ems.repository.EmployeeRepository;
 import com.suvam.ems.service.EmployeeService;
 import lombok.AllArgsConstructor;
@@ -16,11 +18,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
+    private DepartmentRepository departmentRepository;
 
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto) {
 
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
+        Department department = departmentRepository.findById(employeeDto.getDepartmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department do not exists with id"+employeeDto.getDepartmentId()));
+        employee.setDepartment(department);
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }
@@ -51,7 +57,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setFirstName(updatedEmployee.getFirstName());
         employee.setLastName(updatedEmployee.getLastName());
         employee.setEmail(updatedEmployee.getEmail());
-
+        Department department = departmentRepository.findById(updatedEmployee.getDepartmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department do not exists with id"+updatedEmployee.getDepartmentId()));
+        employee.setDepartment(department);
         Employee updatedEmployeeObj = employeeRepository.save(employee);
 
         return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);

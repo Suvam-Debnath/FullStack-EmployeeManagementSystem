@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
-import { createDepartment } from '../services/DepartmentService';
-import { useNavigate } from 'react-router-dom';
+import { createDepartment, getDepartmentById } from '../services/DepartmentService';
+import { useNavigate , useParams} from 'react-router-dom';
+import { updateDepartment } from '../services/DepartmentService';
 
 const DepartmentComponent = () => {
 
@@ -9,19 +10,51 @@ const DepartmentComponent = () => {
     const [departmentName, setDepartmentName] = useState('');
     const [departmentDescription, setDepartmentDescription] = useState('');
 
+    const { id } = useParams(); // Get the department ID from the URL parameters
+
     const navigate = useNavigate();
 
+    // useEffect to fetch department details if an ID is provided (for update)
+    useEffect(() => {
+       getDepartmentById(id).then((response) => {
+        setDepartmentName(response.data.departmentName);
+        setDepartmentDescription(response.data.departmentDescription);
+       }).catch((error) => {
+        console.log(error);
+       });
+    }, [id]);
+
+    // Function to handle form submission for creating or updating a department
     function saveOrUpdateDepartment(e) {
         e.preventDefault();
         const department = { departmentName, departmentDescription };
         console.log(department);
 
-        createDepartment(department).then((response) => {
-            console.log(response.data);
-            navigate('/departments');
-        }).catch((error) => {
-            console.log(error);
-        });
+        if (id) {
+            // If an ID is present, update the existing department
+            updateDepartment(id, department).then((response) => {
+                console.log(response.data);
+                navigate('/departments');
+            }).catch((error) => {
+                console.log(error);
+            });
+        } else {
+            // If no ID is present, create a new department
+            createDepartment(department).then((response) => {
+                console.log(response.data);
+                navigate('/departments');
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }
+
+    function pageTitle() {
+        if (id) {
+            return <h2 className='text-center'>Update Department</h2>;
+        } else {
+            return <h2 className='text-center'>Add Department</h2>;
+        }
     }
 
   return (
@@ -30,7 +63,7 @@ const DepartmentComponent = () => {
         <br />
         <div className='row'>
             <div className='card col-md-6 offset-md-3 offset-md-3'>
-                <h2 className='text-center'>Add Department</h2>
+                {pageTitle()}
                 <div className='card-body'>
                     <form>
                         <div className='form-group mb-2'>
