@@ -5,7 +5,7 @@ const FoooterComponent = () => {
     <div>
         <footer className='footer'>
             <span>
-                Developed by SuvamDebnath [springboot+reactjs]
+                © 2026 Suvam Debnath | Spring Boot + React Application
             </span>
         </footer>
     </div>

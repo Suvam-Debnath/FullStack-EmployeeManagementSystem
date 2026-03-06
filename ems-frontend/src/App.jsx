@@ -6,7 +6,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import EmployeeComponent from './components/EmployeeComponent'
 import ListDepartmentComponent from './components/ListDepartmentComponent'
 import DepartmentComponent from './components/DepartmentComponent'
-
 function App() {
 
   return (
