@@ -64,7 +64,8 @@ const ListDepartmentComponent = () => {
   };
 
   const tableStyle = {
-    minWidth: '700px'
+    width: '100%',
+    minWidth: 0
   };
 
   const actionButtonCommon = {

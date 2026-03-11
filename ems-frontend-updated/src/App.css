@@ -82,7 +82,8 @@ main {
         display: none;
     }
     .responsive-table tr {
-        display: block;
+        display: flex;
+        flex-direction: column;
         margin-bottom: 15px;
         border-radius: 8px;
         background: white;
@@ -91,7 +92,9 @@ main {
     }
     .responsive-table td {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
+        align-items: center;
         padding: 8px 10px;
         border: none;
         position: relative;
@@ -99,10 +102,32 @@ main {
     .responsive-table td::before {
         content: attr(data-label);
         font-weight: 600;
-        flex: 1;
+        flex: 1 0 100%;
         color: #555;
+        margin-right: 10px;
     }
-    .responsive-table td:last-child {
+    .responsive-table td[data-label="Actions"] {
+        margin-top: 12px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
         padding-top: 12px;
     }
+    .responsive-table td[data-label="Actions"]::before {
+        content: "";
+        display: none;
+    }
+    .responsive-table td[data-label="Actions"] > div {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .responsive-table td[data-label="Actions"] button {
+        flex: 1 1 auto;
+        min-width: 120px;
+    }
 }
+
