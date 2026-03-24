@@ -51,4 +51,10 @@ public class EmployeeController {
         employeeService.deleteEmployee(employeeId);
         return ResponseEntity.ok("Employee deleted successfully!.");
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<EmployeeDto>> searchEmployee(@RequestParam String keyword) {
+        List<EmployeeDto> employees = employeeService.searchEmployees(keyword);
+        return ResponseEntity.ok(employees);
+    }
 }

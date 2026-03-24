@@ -74,4 +74,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employeeRepository.deleteById(employeeId);
     }
+
+    @Override
+    public List<EmployeeDto> searchEmployees(String keyword) {
+
+        List<Employee> employees;
+
+        // 👉 Check if keyword is numeric (ID search)
+        if (keyword.matches("\\d+")) {
+            Long id = Long.parseLong(keyword);
+
+            employees = employeeRepository.findById(id)
+                    .map(List::of)   // convert Optional → List
+                    .orElse(List.of());
+        }
+        // 👉 Otherwise search by name
+        else {
+            employees = employeeRepository.searchByName(keyword);
+        }
+
+        return employees.stream()
+                .map(EmployeeMapper::mapToEmployeeDto)
+                .collect(Collectors.toList());
+    }
 }
