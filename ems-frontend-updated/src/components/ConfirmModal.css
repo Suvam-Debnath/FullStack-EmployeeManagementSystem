@@ -1,0 +1,90 @@
+.confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: confirmModalFade 180ms ease-out;
+}
+
+.confirm-modal-box {
+  width: min(92%, 420px);
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 24px 18px;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.2);
+  transform: scale(0.98);
+  animation: confirmModalScale 220ms ease-out forwards;
+}
+
+.confirm-modal-message {
+  margin: 0 0 18px;
+  color: #111827;
+  font-size: 1rem;
+  line-height: 1.65;
+  text-align: center;
+  font-weight: 600;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.confirm-modal-cancel,
+.confirm-modal-confirm {
+  min-width: 92px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+}
+
+.confirm-modal-cancel {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.confirm-modal-cancel:hover {
+  background: #e5e7eb;
+}
+
+.confirm-modal-confirm {
+  background: #dc3545;
+  color: white;
+}
+
+.confirm-modal-confirm:hover {
+  background: #c82333;
+}
+
+.confirm-modal-cancel:focus,
+.confirm-modal-confirm:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.4);
+  outline-offset: 2px;
+}
+
+@keyframes confirmModalFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes confirmModalScale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

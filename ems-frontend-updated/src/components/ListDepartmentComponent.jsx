@@ -1,11 +1,14 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getAllDepartments, deleteDepartment } from '../services/DepartmentService';
 import { Link ,useNavigate} from 'react-router-dom';
+import ConfirmModal from './ConfirmModal';
 
 const ListDepartmentComponent = () => {
 
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
   const navigate = useNavigate();
 
   // fetch departments
@@ -32,13 +35,33 @@ const ListDepartmentComponent = () => {
     navigate(`/edit-department/${id}`);
   }
 
-  function removeDepartment(id) {
-    deleteDepartment(id).then((response) => {
-      console.log(response.data);
-      listOfDepartments();
-    }).catch((error) => {
-      console.log(error);
-    });
+  function handleDeleteClick(id) {
+    setSelectedDepartmentId(id);
+    setShowModal(true);
+  }
+
+  function handleConfirmDelete() {
+    if (!selectedDepartmentId) {
+      setShowModal(false);
+      return;
+    }
+
+    deleteDepartment(selectedDepartmentId)
+      .then(() => {
+        setShowModal(false);
+        setSelectedDepartmentId(null);
+        listOfDepartments();
+      })
+      .catch((error) => {
+        console.log(error);
+        setShowModal(false);
+        setSelectedDepartmentId(null);
+      });
+  }
+
+  function handleCancelDelete() {
+    setShowModal(false);
+    setSelectedDepartmentId(null);
   }
 
   // styles
@@ -149,7 +172,7 @@ const ListDepartmentComponent = () => {
                                             >✏️ Update</button>
                                             <button
                                                 style={deleteBtnStyle}
-                                                onClick={()=> removeDepartment(department.id)}
+                                                onClick={() => handleDeleteClick(department.id)}
                                                 onMouseOver={e => e.currentTarget.style.opacity = 0.85}
                                                 onMouseOut={e => e.currentTarget.style.opacity = 1}
                                             >🗑️ Delete</button>
@@ -162,6 +185,13 @@ const ListDepartmentComponent = () => {
                 </tbody>
             </table>
         </div>
+
+        <ConfirmModal
+            show={showModal}
+            message='Do you want to delete this item?'
+            onConfirm={handleConfirmDelete}
+            onCancel={handleCancelDelete}
+        />
     </div>
   )
 }

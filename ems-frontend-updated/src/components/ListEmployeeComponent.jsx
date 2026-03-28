@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { deleteEmployee, listEmployees, searchEmployees } from '../services/EmployeeService';
 import { useNavigate } from 'react-router-dom';
+import ConfirmModal from './ConfirmModal';
 
 const ListEmployeeComponent = () => {
 
-    // State variables for employees list, search keyword, and loading state
+    // State variables for employees list, search keyword, loading state, and confirmation modal
     const [employees, setEmployees] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
 
     const navigator = useNavigate();
 
@@ -56,12 +59,33 @@ const ListEmployeeComponent = () => {
         navigator(`/edit-employee/${id}`);
     }
 
-    function removeEmployee(id){
-        deleteEmployee(id).then(response => {
-           getAllEmployees();
-        }).catch(error => {
-            console.log(error);
-        })
+    function handleDeleteClick(id) {
+        setSelectedEmployeeId(id);
+        setShowModal(true);
+    }
+
+    function handleConfirmDelete() {
+        if (!selectedEmployeeId) {
+            setShowModal(false);
+            return;
+        }
+
+        deleteEmployee(selectedEmployeeId)
+            .then(() => {
+                setShowModal(false);
+                setSelectedEmployeeId(null);
+                getAllEmployees();
+            })
+            .catch(error => {
+                console.log(error);
+                setShowModal(false);
+                setSelectedEmployeeId(null);
+            });
+    }
+
+    function handleCancelDelete() {
+        setShowModal(false);
+        setSelectedEmployeeId(null);
     }
 
     // Styles
@@ -198,7 +222,7 @@ const ListEmployeeComponent = () => {
                                             >✏️ Update</button>
                                             <button
                                                 style={deleteBtnStyle}
-                                                onClick={()=> removeEmployee(employee.id)}
+                                                onClick={() => handleDeleteClick(employee.id)}
                                                 onMouseOver={e => e.currentTarget.style.opacity = 0.85}
                                                 onMouseOut={e => e.currentTarget.style.opacity = 1}
                                             >🗑️ Delete</button>
@@ -211,6 +235,13 @@ const ListEmployeeComponent = () => {
                 </tbody>
             </table>
         </div>
+
+        <ConfirmModal
+            show={showModal}
+            message='Do you want to delete this item?'
+            onConfirm={handleConfirmDelete}
+            onCancel={handleCancelDelete}
+        />
     </div>
   )
 }
