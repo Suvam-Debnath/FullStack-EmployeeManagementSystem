@@ -1,5 +1,5 @@
 import axios from "axios";
-const EMPLOYEE_API_BASE_URL = "https://fullstack-ems.onrender.com/api/employees";
+const EMPLOYEE_API_BASE_URL = "https://fullstackems.onrender.com/api/employees";
 
 // Function to fetch the list of employees by sending a GET request to the backend API
 export const listEmployees = () => axios.get(EMPLOYEE_API_BASE_URL);
@@ -15,3 +15,7 @@ export const updateEmployee = (employeeId, employee) => axios.put(EMPLOYEE_API_B
 
 // Function to delete an employee by sending a DELETE request to the backend API
 export const deleteEmployee = (employeeId) => axios.delete(EMPLOYEE_API_BASE_URL + '/' + employeeId);
+
+// Function to search employees by keyword (name or id)
+export const searchEmployees = (keyword) => 
+  axios.get(`${EMPLOYEE_API_BASE_URL}/search?keyword=${keyword}`);

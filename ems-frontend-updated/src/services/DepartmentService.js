@@ -1,6 +1,6 @@
 import axios from "axios";  
 
-const DEPARTMENT_REST_API_BASE_URL = "https://fullstack-ems.onrender.com/api/departments";
+const DEPARTMENT_REST_API_BASE_URL = "https://fullstackems.onrender.com/api/departments";
 
 export const getAllDepartments=()=>axios.get(DEPARTMENT_REST_API_BASE_URL);
 

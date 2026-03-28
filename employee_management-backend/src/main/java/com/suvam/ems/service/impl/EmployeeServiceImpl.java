@@ -80,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         List<Employee> employees;
 
-        // 👉 Check if keyword is numeric (ID search)
+        // Check if keyword is numeric (ID search)
         if (keyword.matches("\\d+")) {
             Long id = Long.parseLong(keyword);
 
@@ -88,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .map(List::of)   // convert Optional → List
                     .orElse(List.of());
         }
-        // 👉 Otherwise search by name
+        // Otherwise search by name
         else {
             employees = employeeRepository.searchByName(keyword);
         }

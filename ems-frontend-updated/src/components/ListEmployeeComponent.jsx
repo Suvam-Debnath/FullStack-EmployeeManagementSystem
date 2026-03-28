@@ -1,26 +1,51 @@
-import React, {useEffect, useState} from 'react'
-import { deleteEmployee, listEmployees } from '../services/EmployeeService';
+import React, { useEffect, useState } from 'react'
+import { deleteEmployee, listEmployees, searchEmployees } from '../services/EmployeeService';
 import { useNavigate } from 'react-router-dom';
 
 const ListEmployeeComponent = () => {
 
-    // State variable to hold the list of employees
+    // State variables for employees list, search keyword, and loading state
     const [employees, setEmployees] = useState([]);
+    const [keyword, setKeyword] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const navigator = useNavigate();
 
-    // useEffect to fetch the list of employees when the component mounts
-    useEffect(()=>
-    {
-       getAllEmployees();
-    }, [])
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const trimmedKeyword = keyword.trim();
+            setLoading(true);
+            const request = trimmedKeyword ? searchEmployees(trimmedKeyword) : listEmployees();
 
-    function getAllEmployees(){
-        listEmployees().then(response => {
+            request
+                .then(response => {
+                    setEmployees(response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                    setEmployees([]);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }, 450);
+
+        return () => clearTimeout(timer);
+    }, [keyword]);
+
+    function getAllEmployees() {
+        setLoading(true);
+        listEmployees()
+            .then(response => {
                 setEmployees(response.data);
-            }).catch(error => {
-                console.log(error);
             })
+            .catch(error => {
+                console.log(error);
+                setEmployees([]);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }
 
     function addNewEmployee(){
@@ -103,7 +128,22 @@ const ListEmployeeComponent = () => {
             <p style={{ margin: 0, opacity: 0.9 }}>Manage your workforce from here</p>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '15px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '12px', marginBottom: '20px' }}>
+            <input
+                type='text'
+                placeholder='Search by ID or name'
+                value={keyword}
+                onChange={e => setKeyword(e.target.value)}
+                style={{
+                    flex: '1 1 320px',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    border: '1px solid #d1d5db',
+                    fontSize: '1rem',
+                    outline: 'none'
+                }}
+            />
+
             <button
                 style={addBtnStyle}
                 onClick={addNewEmployee}
@@ -113,7 +153,13 @@ const ListEmployeeComponent = () => {
                 ➕ Add Employee
             </button>
         </div>
-        
+
+        {loading && (
+            <div style={{ marginBottom: '18px', color: '#2563eb', fontWeight: 600 }}>
+                Loading employees...
+            </div>
+        )}
+
         <div style={tableContainerStyle}>
             <table className='table table-hover responsive-table' style={tableStyle}>
                 <thead>
@@ -130,7 +176,7 @@ const ListEmployeeComponent = () => {
                         employees.length === 0 ? (
                             <tr>
                                 <td colSpan='5' style={{ textAlign: 'center', padding: '30px', color: '#666' }}>
-                                    No employees found.
+                                    {loading ? 'Loading employees...' : 'No employees found.'}
                                 </td>
                             </tr>
                         ) : (
