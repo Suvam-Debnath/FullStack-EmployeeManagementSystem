@@ -14,6 +14,7 @@ const DepartmentComponent = () => {
         departmentName: '',
         departmentDescription: ''
     });
+    const [loading, setLoading] = useState(false);
 
     const { id } = useParams(); // Get the department ID from the URL parameters
 
@@ -22,12 +23,18 @@ const DepartmentComponent = () => {
     // useEffect to fetch department details if an ID is provided (for update)
     useEffect(() => {
        if (id) {
-           getDepartmentById(id).then((response) => {
-            setDepartmentName(response.data.departmentName);
-            setDepartmentDescription(response.data.departmentDescription);
-           }).catch((error) => {
-            console.log(error);
-           });
+           setLoading(true);
+           getDepartmentById(id)
+             .then((response) => {
+               setDepartmentName(response.data.departmentName);
+               setDepartmentDescription(response.data.departmentDescription);
+             })
+             .catch((error) => {
+               console.log(error);
+             })
+             .finally(() => {
+               setLoading(false);
+             });
        }
     }, [id]);
 
@@ -163,6 +170,18 @@ const DepartmentComponent = () => {
                     <div style={cardStyle}>
                         <div style={{ padding: '30px' }}>
                             {pageTitle()}
+                            {loading && (
+                              <div style={{
+                                marginBottom: '20px',
+                                padding: '14px 18px',
+                                borderRadius: '12px',
+                                background: 'rgba(102, 126, 234, 0.1)',
+                                color: '#1e3a8a',
+                                fontWeight: 600
+                              }}>
+                                Loading department details...
+                              </div>
+                            )}
                             <form>
                                 <div className='form-group mb-3'>
                                     <label style={{ fontWeight: '600', marginBottom: '6px', display: 'block' }}>Department Name</label>
@@ -170,9 +189,11 @@ const DepartmentComponent = () => {
                                         type='text'
                                         value={departmentName}
                                         onChange={(e) => setDepartmentName(e.target.value)}
+                                        disabled={loading}
                                         style={{
                                             ...inputStyle,
-                                            ...(errors.departmentName ? { borderColor: '#dc3545', backgroundColor: '#fff5f5' } : {})
+                                            ...(errors.departmentName ? { borderColor: '#dc3545', backgroundColor: '#fff5f5' } : {}),
+                                            ...(loading ? { opacity: 0.7, cursor: 'not-allowed' } : {})
                                         }}
                                         onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
                                         onBlur={(e) => Object.assign(e.target.style, inputStyle)}
@@ -186,9 +207,11 @@ const DepartmentComponent = () => {
                                         type='text'
                                         value={departmentDescription}
                                         onChange={(e) => setDepartmentDescription(e.target.value)}
+                                        disabled={loading}
                                         style={{
                                             ...inputStyle,
-                                            ...(errors.departmentDescription ? { borderColor: '#dc3545', backgroundColor: '#fff5f5' } : {})
+                                            ...(errors.departmentDescription ? { borderColor: '#dc3545', backgroundColor: '#fff5f5' } : {}),
+                                            ...(loading ? { opacity: 0.7, cursor: 'not-allowed' } : {})
                                         }}
                                         onFocus={(e) => Object.assign(e.target.style, inputFocusStyle)}
                                         onBlur={(e) => Object.assign(e.target.style, inputStyle)}
@@ -198,10 +221,11 @@ const DepartmentComponent = () => {
                                 </div>
                                 <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
                                     <button
-                                        style={buttonStyle}
+                                        style={{ ...buttonStyle, ...(loading ? { opacity: 0.7, cursor: 'not-allowed' } : {}) }}
                                         onClick={saveOrUpdateDepartment}
-                                        onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-                                        onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+                                        onMouseOver={e => !loading && (e.currentTarget.style.transform = 'translateY(-2px)')}
+                                        onMouseOut={e => !loading && (e.currentTarget.style.transform = 'translateY(0)')}
+                                        disabled={loading}
                                     >
                                         {id ? 'Update Dept' : 'Create Dept'}
                                     </button>

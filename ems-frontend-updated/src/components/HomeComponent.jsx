@@ -13,6 +13,10 @@ const HomeComponent = () => {
     navigator('/departments')
   }
 
+  function goToDashboard(){
+    navigator('/dashboard')
+  }
+
   const heroStyle = {
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     padding: '60px 20px',
@@ -233,6 +237,38 @@ const HomeComponent = () => {
               onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
             >
               View All Departments →
+            </button>
+          </div>
+
+          {/* Dashboard Card */}
+          <div 
+            style={{
+              ...cardStyle,
+              ...(hovered === 'dashboard' ? cardHoverStyle : {})
+            }}
+            onMouseEnter={() => setHovered('dashboard')}
+            onMouseLeave={() => setHovered(null)}
+            onClick={goToDashboard}
+          >
+            <span style={{ ...iconStyle, background: 'linear-gradient(135deg, #22c55e 0%, #0ea5e9 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              📊
+            </span>
+            <h2 style={cardTitleStyle}>View Dashboard</h2>
+            <p style={cardDescriptionStyle}>
+              Check employee and department metrics in one centralized view. Use the dashboard for a quick organizational snapshot.
+            </p>
+            <p style={{ fontSize: '0.9rem', color: '#999', marginBottom: '25px' }}>
+              ✓ KPI overview<br/>
+              ✓ Real-time counts<br/>
+              ✓ Clean visual summary
+            </p>
+            <button 
+              style={employeeButtonStyle}
+              onClick={goToDashboard}
+              onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+              onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            >
+              Open Dashboard →
             </button>
           </div>
         </div>

@@ -168,6 +168,7 @@ const ListEmployeeComponent = () => {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
+                        <th>Department</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -175,7 +176,7 @@ const ListEmployeeComponent = () => {
                     {
                         employees.length === 0 ? (
                             <tr>
-                                <td colSpan='5' style={{ textAlign: 'center', padding: '30px', color: '#666' }}>
+                                <td colSpan='6' style={{ textAlign: 'center', padding: '30px', color: '#666' }}>
                                     {loading ? 'Loading employees...' : 'No employees found.'}
                                 </td>
                             </tr>
@@ -186,6 +187,7 @@ const ListEmployeeComponent = () => {
                                     <td data-label="First Name">{employee.firstName}</td>
                                     <td data-label="Last Name">{employee.lastName}</td>
                                     <td data-label="Email">{employee.email}</td>
+                                    <td data-label="Department">{employee.department?.departmentName ?? employee.departmentName ?? employee.departmentId ?? '-'}</td>
                                     <td data-label="Actions">
                                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                             <button

@@ -7,11 +7,12 @@ import EmployeeComponent from './components/EmployeeComponent'
 import ListDepartmentComponent from './components/ListDepartmentComponent'
 import DepartmentComponent from './components/DepartmentComponent'
 import HomeComponent from './components/HomeComponent'
+import DashboardComponent from './components/DashboardComponent'
 
 function App() {
 
   return (
-    <>
+    <div className="app-root">
       <BrowserRouter>
         <HeaderComponent />
         <main>
@@ -31,12 +32,13 @@ function App() {
             <Route path='/add-department' element={<DepartmentComponent />} />
             {/* // http://localhost:3000/edit-department/1 */}
             <Route path='/edit-department/:id' element={<DepartmentComponent />} />
-            
+            {/* // http://localhost:3000/dashboard */}
+            <Route path='/dashboard' element={<DashboardComponent />} />
           </Routes>
         </main>
         <FoooterComponent />
       </BrowserRouter>
-    </>
+    </div>
   )
 }
 

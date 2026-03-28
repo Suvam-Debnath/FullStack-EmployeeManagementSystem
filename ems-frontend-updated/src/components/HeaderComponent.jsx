@@ -15,6 +15,22 @@ const HeaderComponent = () => {
     marginRight: '6px'
   };
 
+  const closeMobileMenu = () => {
+    const collapseEl = document.getElementById('navbarNav');
+    if (!collapseEl || !collapseEl.classList.contains('show')) return;
+
+    const bsCollapse = window.bootstrap?.Collapse;
+    if (bsCollapse) {
+      const instance = bsCollapse.getInstance(collapseEl) || new bsCollapse(collapseEl, { toggle: false });
+      instance.hide();
+    } else {
+      collapseEl.classList.remove('show');
+      collapseEl.setAttribute('aria-expanded', 'false');
+      const toggler = document.querySelector('.navbar-toggler');
+      if (toggler) toggler.classList.add('collapsed');
+    }
+  };
+
   // activeClassName is no longer supported in v6; use className callback
   const getNavLinkClass = ({ isActive }) =>
     isActive ? 'nav-link active' : 'nav-link';
@@ -47,18 +63,23 @@ const HeaderComponent = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <NavLink to="/" className={getNavLinkClass} end>
+                <NavLink to="/" className={getNavLinkClass} end onClick={closeMobileMenu}>
                   🏠 Home
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/employees" className={getNavLinkClass}>
+                <NavLink to="/employees" className={getNavLinkClass} onClick={closeMobileMenu}>
                   <span style={linkIcon}>👥</span>Employees
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="/departments" className={getNavLinkClass}>
+                <NavLink to="/departments" className={getNavLinkClass} onClick={closeMobileMenu}>
                   <span style={linkIcon}>🏢</span>Departments
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/dashboard" className={getNavLinkClass} onClick={closeMobileMenu}>
+                  <span style={linkIcon}>📊</span>Dashboard
                 </NavLink>
               </li>
             </ul>

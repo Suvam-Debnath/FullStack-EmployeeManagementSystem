@@ -6,7 +6,8 @@ html, body, #root {
 }
 
 body {
-    padding-top: 80px; /* Account for fixed header height */
+    margin: 0;
+    padding: 0;
 }
 
 #root {
@@ -14,10 +15,17 @@ body {
     flex-direction: column;
 }
 
+.app-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 /* Main container for routes */
 main {
     flex: 1;
-    overflow-y: auto;
+    padding-top: 80px; /* Account for fixed header height */
+    box-sizing: border-box;
 }
 
 /* Footer Styles */

@@ -5,6 +5,7 @@ import { Link ,useNavigate} from 'react-router-dom';
 const ListDepartmentComponent = () => {
 
   const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // fetch departments
@@ -13,11 +14,18 @@ const ListDepartmentComponent = () => {
   }, []);
 
   function listOfDepartments() {
-    getAllDepartments().then((response) => {
-      setDepartments(response.data);
-    }).catch((error) => {
-      console.log(error);
-    });
+    setLoading(true);
+    getAllDepartments()
+      .then((response) => {
+        setDepartments(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        setDepartments([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   function updateDepartment(id) {
@@ -122,7 +130,7 @@ const ListDepartmentComponent = () => {
                         departments.length === 0 ? (
                             <tr>
                                 <td colSpan='4' style={{ textAlign: 'center', padding: '30px', color: '#666' }}>
-                                    No departments found.
+                                    {loading ? 'Loading departments...' : 'No departments found.'}
                                 </td>
                             </tr>
                         ) : (
