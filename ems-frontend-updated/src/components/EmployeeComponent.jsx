@@ -1,7 +1,8 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createEmployee, getEmployeeById, updateEmployee } from '../services/EmployeeService';
 import { useNavigate , useParams} from 'react-router-dom';
 import { getAllDepartments } from '../services/DepartmentService';
+import Alert from './common/Alert';
 
 const EmployeeComponent = () => {
 
@@ -11,6 +12,9 @@ const EmployeeComponent = () => {
     const[email, setEmail] = useState('');
     const[departmentId, setDepartmentId] = useState('');  
     const[departments, setDepartments] = useState([]); // State to hold list of departments
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
 
     // useEffect to fetch all departments when the component mounts
     useEffect(() => {
@@ -34,6 +38,12 @@ const EmployeeComponent = () => {
 
     // useNavigate hook to navigate programmatically
     const navigator = useNavigate();
+
+    const showSuccessAlert = (message) => {
+        setAlertMessage(message);
+        setAlertType('success');
+        setShowAlert(true);
+    }
 
     // useEffect to fetch employee data if id is present (for update)
     useEffect(() => {
@@ -61,19 +71,23 @@ const EmployeeComponent = () => {
                 // Update employee logic 
                 updateEmployee(id, employee).then(response => {
                     console.log(response.data);
-                    navigator('/employees');
+                    const successMessage = 'Employee updated successfully';
+                    showSuccessAlert(successMessage);
+                    navigator('/employees', { state: { alertMessage: successMessage, alertType: 'success' } });
                 }).catch(error => {
                     console.log(error);
                 })
             } else {
                 // Create new employee
                 createEmployee(employee).then(response => {
-                console.log(response.data);
-                navigator('/employees');
-            }).catch(error => {
-                console.log(error);
-            })
-        }            
+                    console.log(response.data);
+                    const successMessage = 'Employee added successfully';
+                    showSuccessAlert(successMessage);
+                    navigator('/employees', { state: { alertMessage: successMessage, alertType: 'success' } });
+                }).catch(error => {
+                    console.log(error);
+                })
+            }
         }
     }
 
@@ -241,6 +255,12 @@ const EmployeeComponent = () => {
   return (
     <div style={containerStyle}>
         <div className='container'>
+            <Alert
+                message={alertMessage}
+                type={alertType}
+                show={showAlert}
+                onClose={() => setShowAlert(false)}
+            />
             {/* Header Banner */}
             <div style={headerBannerStyle}>
                 <h1 style={headerTitleStyle}>Employee Management</h1>

@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { createDepartment, getDepartmentById, updateDepartment } from '../services/DepartmentService';
 import { useNavigate , useParams} from 'react-router-dom';
+import Alert from './common/Alert';
 
 const DepartmentComponent = () => {
 
     // State variables for department name and description
     const [departmentName, setDepartmentName] = useState('');
     const [departmentDescription, setDepartmentDescription] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
 
     // validation errors
     const [errors, setErrors] = useState({
@@ -19,6 +22,12 @@ const DepartmentComponent = () => {
     const { id } = useParams(); // Get the department ID from the URL parameters
 
     const navigate = useNavigate();
+
+    const showSuccessAlert = (message) => {
+        setAlertMessage(message);
+        setAlertType('success');
+        setShowAlert(true);
+    }
 
     // useEffect to fetch department details if an ID is provided (for update)
     useEffect(() => {
@@ -49,7 +58,9 @@ const DepartmentComponent = () => {
             // If an ID is present, update the existing department
             updateDepartment(id, department).then((response) => {
                 console.log(response.data);
-                navigate('/departments');
+                const successMessage = 'Department updated successfully';
+                showSuccessAlert(successMessage);
+                navigate('/departments', { state: { alertMessage: successMessage, alertType: 'success' } });
             }).catch((error) => {
                 console.log(error);
             });
@@ -57,7 +68,9 @@ const DepartmentComponent = () => {
             // If no ID is present, create a new department
             createDepartment(department).then((response) => {
                 console.log(response.data);
-                navigate('/departments');
+                const successMessage = 'Department added successfully';
+                showSuccessAlert(successMessage);
+                navigate('/departments', { state: { alertMessage: successMessage, alertType: 'success' } });
             }).catch((error) => {
                 console.log(error);
             });
@@ -161,6 +174,12 @@ const DepartmentComponent = () => {
   return (
     <div style={containerStyle}>
         <div className='container'>
+            <Alert
+                message={alertMessage}
+                type={alertType}
+                show={showAlert}
+                onClose={() => setShowAlert(false)}
+            />
             <div style={headerStyle}>
                 <h1 style={{ margin: 0 }}>Department Management</h1>
                 <p style={{ margin: 0, opacity: 0.9 }}>{id ? 'Edit the selected department' : 'Create a new department'}</p>

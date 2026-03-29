@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { getAllDepartments, deleteDepartment } from '../services/DepartmentService';
-import { Link ,useNavigate} from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
+import Alert from './common/Alert';
 
 const ListDepartmentComponent = () => {
 
   const [departments, setDepartments] = useState([]);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('success');
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedDepartmentId, setSelectedDepartmentId] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // fetch departments
   useEffect(() => {
+    if (location.state?.alertMessage) {
+      setAlertMessage(location.state.alertMessage);
+      setAlertType(location.state.alertType || 'success');
+      setShowAlert(true);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+
     listOfDepartments();
-  }, []);
+  }, [location, navigate]);
 
   function listOfDepartments() {
     setLoading(true);
@@ -51,6 +63,9 @@ const ListDepartmentComponent = () => {
         setShowModal(false);
         setSelectedDepartmentId(null);
         listOfDepartments();
+        setAlertMessage('Department deleted successfully');
+        setAlertType('success');
+        setShowAlert(true);
       })
       .catch((error) => {
         console.log(error);
@@ -123,6 +138,12 @@ const ListDepartmentComponent = () => {
 
   return (
     <div className='container' style={{ paddingBottom: '40px' }}>
+        <Alert
+            message={alertMessage}
+            type={alertType}
+            show={showAlert}
+            onClose={() => setShowAlert(false)}
+        />
         <div style={headerStyle}>
             <h2 style={{ margin: 0, fontSize: '2rem' }}>🏢 Department Directory</h2>
             <p style={{ margin: 0, opacity: 0.9 }}>Manage company departments</p>

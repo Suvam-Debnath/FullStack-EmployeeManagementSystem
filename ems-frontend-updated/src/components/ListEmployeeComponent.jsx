@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { deleteEmployee, listEmployees, searchEmployees } from '../services/EmployeeService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
+import Alert from './common/Alert';
 
 const ListEmployeeComponent = () => {
 
-    // State variables for employees list, search keyword, loading state, and confirmation modal
+    // State variables for employees list, search keyword, loading state, confirmation modal, and alerts
     const [employees, setEmployees] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('success');
 
     const navigator = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
+        if (location.state?.alertMessage) {
+            setAlertMessage(location.state.alertMessage);
+            setAlertType(location.state.alertType || 'success');
+            setShowAlert(true);
+            navigator(location.pathname, { replace: true, state: {} });
+        }
+
         const timer = setTimeout(() => {
             const trimmedKeyword = keyword.trim();
             setLoading(true);
@@ -34,7 +46,7 @@ const ListEmployeeComponent = () => {
         }, 450);
 
         return () => clearTimeout(timer);
-    }, [keyword]);
+    }, [keyword, location, navigator]);
 
     function getAllEmployees() {
         setLoading(true);
@@ -75,6 +87,9 @@ const ListEmployeeComponent = () => {
                 setShowModal(false);
                 setSelectedEmployeeId(null);
                 getAllEmployees();
+                setAlertMessage('Employee deleted successfully');
+                setAlertType('success');
+                setShowAlert(true);
             })
             .catch(error => {
                 console.log(error);
@@ -147,6 +162,12 @@ const ListEmployeeComponent = () => {
 
   return (
     <div className='container' style={{ paddingBottom: '40px' }}>
+        <Alert
+            message={alertMessage}
+            type={alertType}
+            show={showAlert}
+            onClose={() => setShowAlert(false)}
+        />
         <div style={headerStyle}>
             <h2 style={{ margin: 0, fontSize: '2rem' }}>👥 Employee Directory</h2>
             <p style={{ margin: 0, opacity: 0.9 }}>Manage your workforce from here</p>
